@@ -9,7 +9,10 @@ const weatherIcon = document.querySelector('.weather-icon')
 const temperature = document.querySelector('.temperature')
 const weatherDescription = document.querySelector('.weather-description')
 const city = document.querySelector('.city')
-
+const quote = document.querySelector('.quote')
+const author = document.querySelector('.author')
+const changeQuote = document.querySelector('.change-quote')
+console.log(quote)
 getRandomNum()
 
 function showTime() {
@@ -133,5 +136,31 @@ city.addEventListener('change', (event) => {
         temperature.textContent = `${res.main.temp}°C`
         weatherDescription.textContent = res.weather[0].description
       })
+      .catch((error) => {
+        console.log('Bad request, error')
+      })
   }
+})
+const quotes = 'data.json'
+fetch(quotes)
+  .then((res) => res.json())
+  .then((data) => {
+    appendData(data)
+  })
+
+function appendData(data) {
+  let i = Math.floor(Math.random() * 3)
+  quote.innerHTML = data[i].text
+  author.innerHTML = data[i].author
+  console.log(i)
+}
+changeQuote.addEventListener('click', () => {
+  fetch(quotes)
+    .then((res) => res.json())
+    .then((data) => {
+      let i = Math.floor(Math.random() * 3)
+      quote.innerHTML = data[i].text
+      author.innerHTML = data[i].author
+      console.log(i)
+    })
 })
