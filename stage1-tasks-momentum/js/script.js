@@ -5,7 +5,11 @@ const body = document.querySelector('body')
 let randomNumber = Math.floor(Math.random() * 20) + 1
 let slideNext = document.querySelector('.slide-next')
 let slidePrev = document.querySelector('.slide-prev')
-console.log(slideNext)
+const weatherIcon = document.querySelector('.weather-icon')
+const temperature = document.querySelector('.temperature')
+const weatherDescription = document.querySelector('.weather-description')
+const city = document.querySelector('.city')
+
 getRandomNum()
 
 function showTime() {
@@ -106,3 +110,28 @@ function setBg() {
       ".jpg')"
   }
 }
+city.addEventListener('change', (event) => {
+  const cityName = event.target.value
+  console.log(cityName)
+  getWeather()
+  async function getWeather() {
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=ru&appid=6bf57d68880f67c12d677aff0febd81a&units=metric`
+
+    fetch(url)
+      .then((data) => {
+        if (data.ok) {
+          return data.json()
+        } else {
+          temperature.textContent =
+            'Error! city not found for ' + cityName + '!'
+          weatherDescription.textContent = ' '
+        }
+      })
+      .then((res) => {
+        weatherIcon.className = 'weather-icon owf'
+        weatherIcon.classList.add(`owf-${res.weather[0].id}`)
+        temperature.textContent = `${res.main.temp}°C`
+        weatherDescription.textContent = res.weather[0].description
+      })
+  }
+})
